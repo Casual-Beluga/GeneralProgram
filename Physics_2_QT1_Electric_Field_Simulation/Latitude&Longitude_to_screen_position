@@ -1,0 +1,40 @@
+import csv
+point_coordinates = [1,2]
+
+n = 0
+
+def x_position(longitude):
+    length = (124.67-abs(longitude))/57.72*1440
+    point_coordinates[0] = length
+
+def y_position(latitude):
+    height = (49.38-latitude)/23.54*660
+    point_coordinates[1] = height
+
+
+with open("./us-state-capitals.csv", 'r') as file: 
+    csvreader = csv.DictReader(file)
+    for row in csvreader:
+        # print(row['latitude'], row['longitude'])
+        vertical = float(row['latitude'])
+        horizontal = float(row['longitude'])
+        x_position(horizontal)
+        y_position(vertical)
+        print("""
+            {
+        "source": {"""
+            """"id": """ + str(n) + """,
+            "sign": "Positive",
+            "magnitude": 1,
+            "position": { 
+            "x": """ + str(point_coordinates[0]) +
+            """, "y": """ + str(point_coordinates[1]) +
+            """},
+        "r": 20
+        },
+        "density": 20,
+        "steps": 3000,
+        "delta": 2
+            },
+        """)
+        n = n + 1
